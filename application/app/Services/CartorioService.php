@@ -12,21 +12,24 @@ class CartorioService
         $clients = simplexml_load_file($request->files->get('file'));
         $clients = json_decode(json_encode((array) $clients), true);
 
-        foreach ($clients['torcedor'] as $client) {
+        foreach ($clients['cartorio'] as $client) {
+//        dd($client);
             $arrReplace = [
-                'name' => $client['@attributes']['nome'],
-                'document' => $client['@attributes']['documento'],
-                'postcode' => $client['@attributes']['cep'],
-                'address' => $client['@attributes']['endereco'],
-                'district' => $client['@attributes']['bairro'],
-                'city' => $client['@attributes']['cidade'],
-                'state' => $client['@attributes']['uf'],
-                'telephone' => $client['@attributes']['telefone'],
-                'email' => $client['@attributes']['email'],
-                'active' => $client['@attributes']['ativo'] ? 1 : 0,
+                'nome' => $client['nome'],
+                'documento' => $client['documento'],
+                'razao' => $client['razao'],
+                'tipo_documento' => $client['tipo_documento'],
+                'cep' => $client['cep'],
+                'endereco' => $client['endereco'],
+                'tabeliao' => $client['tabeliao'],
+                'bairro' => $client['bairro'],
+                'cidade' => $client['cidade'],
+                'uf' => $client['uf'],
+                'ativo' => $client['ativo'] ? 1 : 0,
+//                'email' => $client['email'],
             ];
             // Verify if document is unique to save only different data
-            $find = Cartorio::where('document', '=', $client['@attributes']['documento'])->first();
+            $find = Cartorio::where('documento', '=', $client['documento'])->first();
 
             $client = new Cartorio();
 
@@ -34,16 +37,17 @@ class CartorioService
                 $client = $client::find($find->id);
             }
 
-            $client->name = $arrReplace['name'];
-            $client->document = $arrReplace['document'];
-            $client->postcode = $arrReplace['postcode'];
-            $client->address = $arrReplace['address'];
-            $client->district = $arrReplace['district'];
-            $client->city = $arrReplace['city'];
-            $client->email = $arrReplace['email'];
-            $client->telephone = $arrReplace['telephone'];
-            $client->active = $arrReplace['active'];
-            $client->state = $arrReplace['state'];
+            $client->nome = $arrReplace['nome'];
+            $client->documento = $arrReplace['documento'];
+            $client->razao = $arrReplace['razao'];
+            $client->tipo_documento = $arrReplace['tipo_documento'];
+            $client->cep = $arrReplace['cep'];
+            $client->logradouro = $arrReplace['endereco'];
+            $client->nome_tabeliao = $arrReplace['tabeliao'];
+            $client->bairro = $arrReplace['bairro'];
+            $client->localidade = $arrReplace['cidade'];
+            $client->ativo = $arrReplace['ativo'];
+            $client->uf = $arrReplace['uf'];
 
             $client->save();
         }
