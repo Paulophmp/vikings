@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y \
         libxml2-dev \
         libldap2-dev \
         libldb-dev \
-        zip
+        zip \
+        git
 
 RUN  docker-php-ext-install -j$(nproc) pdo soap mysqli pdo_mysql \
     && docker-php-ext-enable  soap
