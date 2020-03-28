@@ -1,10 +1,22 @@
 import * as http from './http';
 
-const buildData = (params) => {
-    const bodyFormData = new FormData();
+const buildData = (params, form, namespace) => {
+    const bodyFormData = form || new FormData();
 
+    let formKey;
     Object.keys(params).forEach((key) => {
-        bodyFormData.append(key, params[key]);
+        if (namespace) {
+            formKey = '${namespace}[${key}]';
+        } else {
+            formKey = key;
+        }
+
+        if (typeof params[key] === 'object' && !(params[key] instanceof File)) {
+            buildData(params[key], bodyFormData, key);
+        } else {
+            // if it's a string or a File object
+            bodyFormData.append(formKey, params[key]);
+        }
     });
 
     return bodyFormData;
@@ -28,11 +40,18 @@ export const syncExcluirCliente = (id) => {
     return http.deleteRequest(path, (id));
 };
 
+// export const cadastraClienteImportXML = function (params) {
+//     console.log('teste', params);
+//     const path = '/cartorio/cadastrar-xml/';
+//     return http.postRequest(path, buildData(params));
+// };
+
 export const cadastraClienteImportXML = function (params) {
     console.log('teste', params);
     const path = '/cartorio/cadastrar-xml/';
-    return http.postRequest(path, buildData(params));
+    return http.postRequest(path, buildData({ file : params }));
 };
+
 
 export const editarClienteApi = function (params) {
     console.log('editar', params.id);

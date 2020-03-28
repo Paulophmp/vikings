@@ -5,6 +5,7 @@ export const state = {
     excluirCliente: [],
     downloadCliente: {},
     editarCliente: [],
+    updateCliente: [],
 };
 
 export const mutations = {
@@ -16,6 +17,9 @@ export const mutations = {
     },
     [types.EDITAR_CLIENTE](state, params) {
         state.editarCliente = params;
+    },
+    [types.UPLOAD_CLIENTE](state, params) {
+        state.updateCliente = params;
     },
     [types.EXCLUIR_CLIENTE] (state, certificadoId) {
         state.excluirCliente.find( (certificado, index) => {

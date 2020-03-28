@@ -27,14 +27,13 @@ export const clienteCadastrarImport = async ({ commit }, params ) => await api
     .cadastraClienteImportXML(params)
     .then(({ data }) => {
         console.log('akiiii', params);
-        commit(types.SET_CLIENTE, data);
+        commit(types.UPLOAD_CLIENTE, data);
         return data;
     });
 
-export const editarCliente=  ({ commit }, params ) => api
+export const editarCliente=  async ({ commit }, params ) => await api
     .editarClienteApi(params)
     .then(({ data }) => {
-        console.log('EDITAR', params);
         commit(types.EDITAR_CLIENTE, data);
         return data;
     });
