@@ -25,7 +25,11 @@
           <v-toolbar flat>
             <v-toolbar-title class="grey--text">Cadastro de Cartórios</v-toolbar-title>
             <v-spacer></v-spacer>
-<!--              <formulario/>-->
+              <template>
+                  <v-btn class="mx-2" fab dark small color="primary" @click="cadastrar">
+                      <v-icon dark>mdi-plus</v-icon>
+                  </v-btn>
+              </template>
           </v-toolbar>
           <v-divider></v-divider>
             <div v-if="loading">
@@ -86,7 +90,11 @@
               <formulario type-form="edite" :item="editedItem"></formulario>
           </v-card>
       </v-dialog>
-
+      <v-dialog v-model="dialogCadastar" max-width="1180px">
+          <v-card>
+              <formulario></formulario>
+          </v-card>
+      </v-dialog>
       <v-dialog
               v-model="dialogVisual"
               @keydown.esc="dialog = false"
@@ -113,6 +121,12 @@
                               <p />
                           </v-flex>
                           <v-flex>
+                              <p><b>Razão</b></p>
+                              <p>
+                                  {{ itemEmVisualizacao.razao }}
+                              </p>
+                          </v-flex>
+                          <v-flex>
                               <p><b>Nome do Tabelião</b></p>
                               <p>
                                   {{ itemEmVisualizacao.nome_tabeliao }}
@@ -120,8 +134,11 @@
                           </v-flex>
                           <v-flex>
                               <p><b>Tipo do Documento</b></p>
-                              <p>
-                                  {{ itemEmVisualizacao.tipo_documento }}
+                              <p v-if="itemEmVisualizacao.tipo_documento === '1'">
+                                  CPF
+                              </p>
+                              <p v-else>
+                                  CNPJ
                               </p>
                           </v-flex>
                           <v-flex>
@@ -220,6 +237,7 @@
 
         itemIdParaExclusao: null,
         dialog: false,
+        dialogCadastar: false,
         dialogVisual: false,
         loading: true,
         editedItem: '',
@@ -284,6 +302,9 @@
             const index = this.clientesGetter.indexOf(item);
             // this.excluirClienteAction(item.id);
             this.excluirClienteAction(item.id) && this.clientesGetter.splice(index, 1);
+        },
+        cadastrar() {
+            this.dialogCadastar = true;
         },
     },
   }

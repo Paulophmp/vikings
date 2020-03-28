@@ -25,11 +25,20 @@
                           lazy-validation
                   >
                       <v-row>
-                          <v-col cols="12" sm="6">
+                          <v-col cols="10" sm="4">
                               <v-text-field
                                       v-model="cadastrar.nome"
                                       :rules="nameRules"
                                       label="Nome do cartório"
+                                      outlined
+                              ></v-text-field>
+                          </v-col>
+
+                          <v-col cols="10" sm="4">
+                              <v-text-field
+                                      v-model="cadastrar.razao"
+                                      :rules="nameRules"
+                                      label="Razão Social"
                                       outlined
                               ></v-text-field>
                           </v-col>
@@ -42,6 +51,32 @@
                                           outlined
                                   ></v-text-field>
                               </v-col>
+
+                          <v-col cols="9" sm="3">
+                              <v-select
+                                      v-model="cadastrar.tipo_documento"
+                                      :items="itemsDocumento"
+                                      label="Tipo de documento"
+                                      :rules="tipoRules"
+                                      item-text="label"
+                                      item-value="id"
+                                      required
+                                      outlined
+                                      clear-icon="clear"
+                              >
+                              </v-select>
+                          </v-col>
+                          <v-col cols="10" sm="4">
+                              <v-text-field
+                                      v-model="cadastrar.documento"
+                                      :counter="14"
+                                      ref="documento"
+                                      :rules="cpfRules"
+                                      label="Documento"
+                                      outlined
+                              ></v-text-field>
+                          </v-col>
+
                               <v-col cols="8" sm="2">
                                   <v-text-field
                                           v-model="cadastrar.cep"
@@ -103,20 +138,12 @@
                                       ></v-text-field>
                                   </v-col>
                               </v-layout>
-                          <v-col cols="10" sm="4">
-                              <v-text-field
-                                      v-model="cadastrar.documento"
-                                      :counter="14"
-                                      ref="documento"
-                                      :rules="cpfRules"
-                                      label="Documento"
-                                      outlined
-                              ></v-text-field>
-                          </v-col>
+
                           <v-col cols="9" sm="3">
                               <v-select
                                       v-model="cadastrar.ativo"
                                       :items="items"
+                                      ref="ativo"
                                       label="Tipo de ambiente"
                                       :rules="tipoRules"
                                       item-text="label"
@@ -194,6 +221,11 @@
                 { id: '0', label: 'Inativo' },
                 { id: '1', label: 'Ativo' },
             ],
+            itemsDocumento: [
+                { id: '1', label: 'CPF' },
+                { id: '2', label: 'CNPJ' },
+            ],
+            valid: true,
             dialog: false,
             loading: false,
             statusSnackBar: '',
@@ -280,6 +312,7 @@
             ...mapActions({
                 clienteCadastrar: 'cartorio/clienteCadastrar',
                 editarCliente: 'cartorio/editarCliente',
+                clienteAction: 'cartorio/clienteAction',
             }),
             searchCep () {
                 if(this.cadastrar.cep != null && this.cadastrar.cep.length == 8) {
@@ -298,26 +331,43 @@
                 this.cadastrar.bairro = address.bairro;
                 this.cadastrar.localidade = address.localidade;
                 this.cadastrar.uf = address.uf;
-                this.$refs.documento.focus();
+                this.$refs.ativo.focus();
             },
-            validate(){
+            validate () {
                 if (this.$refs.form.validate()) {
                     this.loading = true;
-                    this.clienteCadastrar(this.cadastrar).then(() => {
-                        this.loading = false;
-                    });
-                } else {
-                    this.menssageError();
+                    this.clienteCadastrar(this.cadastrar)
+                        .then((data) => {
+                            console.log(data);
+                            this.clienteAction();
+                            this.loading = false;
+                    })
+                        .finally(() => {
+                            this.menssageSuccess('Cadastrado com sucesso!');
+                            this.loading = false;
+                            this.dialog = false;
+                        });
                 }
+
+                // this.loading1 = true;
+                // this.clienteCadastrarImport(this.file)
+                //     .then((data) => {
+                //         console.log(data);
+                //         this.clienteAction();
+                //         this.file = null;
+                //     })
+                //     .finally(() => {
+                //         this.loading1 = false;
+                //     });
             },
             reset () {
                 this.$refs.form.reset()
             },
-            // menssageSuccess(text = 'Cadastrado com sucesso!'){
-            //     this.statusSnackBar = 'success';
-            //     this.text = text;
-            //     this.snackbar = true;
-            // },
+            menssageSuccess(text){
+                this.statusSnackBar = 'success';
+                this.text = text;
+                this.snackbar = true;
+            },
             menssageError(text = 'Erro ao cadastrar!'){
                 this.statusSnackBar = 'error';
                 this.text = text;

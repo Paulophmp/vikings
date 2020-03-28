@@ -39,8 +39,8 @@
                 </v-col>
                 <template v-if="file">
                     <v-btn
-                            :loading="loading"
-                            :disabled="loading"
+                            :loading="loading1"
+                            :disabled="loading1"
                             color="blue-grey"
                             class="ma-2 white--text"
                             @click="submit"
@@ -74,16 +74,9 @@
             return {
                 file: null,
                 loader: null,
+                loading1: false,
                 loading: false,
             }
-        },
-        watch: {
-            loader () {
-                const l = this.loader;
-                this[l] = !this[l];
-                setTimeout(() => (this[l] = false), 1000);
-                this.loader = null
-            },
         },
         computed: {
             ...mapGetters({
@@ -94,6 +87,7 @@
             ...mapActions({
                 clienteCadastrarImport: 'cartorio/clienteCadastrarImport',
                 clienteDownload: 'cartorio/clienteDownload',
+                clienteAction: 'cartorio/clienteAction',
             }),
             fileValidation() {
                 let file = this.file;
@@ -104,10 +98,18 @@
                 }
             },
             submit () {
-                this.clienteCadastrarImport(this.file).then(() => {
-                    this.loading = false;
-                });
+                this.loading1 = true;
+                this.clienteCadastrarImport(this.file)
+                    .then((data) => {
+                        console.log(data);
+                        this.clienteAction();
+                        this.file = null;
+                    })
+                    .finally(() => {
+                        this.loading1 = false;
+                    });
             },
+
             download () {
                 this.clienteDownload().then(() => {
                     this.loading = false;
