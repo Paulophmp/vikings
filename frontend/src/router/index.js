@@ -19,7 +19,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/clients',
+    path: '/cartorios',
     name: 'HelloWord',
     component: () => import(/* webpackChunkName: "ListarCertificados" */ '../views/Home.vue'),
   },

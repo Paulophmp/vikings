@@ -27,25 +27,24 @@
                       <v-row>
                           <v-col cols="12" sm="6">
                               <v-text-field
-                                      v-model="cadastrar.name"
+                                      v-model="cadastrar.nome"
                                       :rules="nameRules"
-                                      label="Nome"
+                                      label="Nome do cartório"
                                       outlined
                               ></v-text-field>
                           </v-col>
 
                               <v-col cols="10" sm="4">
                                   <v-text-field
-                                          v-model="cadastrar.document"
-                                          :counter="14"
-                                          :rules="cpfRules"
-                                          label="CPF"
+                                          v-model="cadastrar.nome_tabeliao"
+                                          :rules="nameRules"
+                                          label="Nome tabelião"
                                           outlined
                                   ></v-text-field>
                               </v-col>
                               <v-col cols="8" sm="2">
                                   <v-text-field
-                                          v-model="cadastrar.postcode"
+                                          v-model="cadastrar.cep"
                                           label="CEP"
                                           outlined
                                           counter="9"
@@ -55,13 +54,13 @@
                                           required
                                   ></v-text-field>
                               </v-col>
-                                  <v-layout  v-if="cadastrar.postcode != null && cadastrar.postcode.length === 8">
+                                  <v-layout  v-if="cadastrar.cep != null && cadastrar.cep.length === 8">
 
                                   <v-col cols="8" sm="4"
                                   >
                                       <v-text-field
                                               label="Endereço"
-                                              v-model="cadastrar.address"
+                                              v-model="cadastrar.logradouro"
                                               filled
                                               required
                                               outlined
@@ -72,7 +71,7 @@
                                   >
                                       <v-text-field
                                               label="Bairro"
-                                              v-model="cadastrar.district"
+                                              v-model="cadastrar.bairro"
                                               ref="numeroCep"
                                               required
                                               filled
@@ -84,7 +83,7 @@
                                   >
                                       <v-text-field
                                               label="Cidade"
-                                              v-model="cadastrar.city"
+                                              v-model="cadastrar.localidade"
                                               ref="numeroCep"
                                               required
                                               filled
@@ -96,7 +95,7 @@
                                   >
                                       <v-text-field
                                               label="UF"
-                                              v-model="cadastrar.state"
+                                              v-model="cadastrar.uf"
                                               ref="numeroCep"
                                               required
                                               filled
@@ -104,28 +103,19 @@
                                       ></v-text-field>
                                   </v-col>
                               </v-layout>
-                          <v-col cols="12" sm="6">
+                          <v-col cols="10" sm="4">
                               <v-text-field
-                                      v-model="cadastrar.email"
-                                      ref="email"
-                                      label="Email"
-                                      :rules="emailRules"
-                                      outlined
-                              ></v-text-field>
-                          </v-col>
-
-                          <v-col cols="9" sm="3">
-                              <v-text-field
-                                      v-model="cadastrar.telephone"
-                                      ref="telephone"
-                                      label="Telefone"
-                                      :rules="telephoneRules"
+                                      v-model="cadastrar.documento"
+                                      :counter="14"
+                                      ref="documento"
+                                      :rules="cpfRules"
+                                      label="Documento"
                                       outlined
                               ></v-text-field>
                           </v-col>
                           <v-col cols="9" sm="3">
                               <v-select
-                                      v-model="cadastrar.active"
+                                      v-model="cadastrar.ativo"
                                       :items="items"
                                       label="Tipo de ambiente"
                                       :rules="tipoRules"
@@ -215,16 +205,17 @@
             text: '',
 
             cadastrar: {
-                name: '',
-                document: '', //cpf
-                postcode: '', //cep
-                address: '', // logradouro
-                district: '', // bairro
-                city: '', // localidade
-                state: '', // UF
-                telephone: '',
-                email : '',
-                active : '',
+                id: '',
+                nome: '', //name: '',
+                documento: '', //document: '', //cpf
+                razao: '', //cep: '', //cep
+                tipo_documento: '', //address: '', // logradouro
+                cep: '', //district: '', // bairro
+                logradouro: '', //city: '', // localidade
+                nome_tabeliao: '', //state: '', // UF
+                bairro: '', //telephone: '',
+                localidade: '', //email : '',
+                ativo: '', //active : '',
             },
             nameRules: [
                 v => !!v || 'Name is required',
@@ -250,22 +241,23 @@
         }),
         computed: {
             ...mapGetters({
-                clientesGetter: 'cliente/clientesGetter',
+                clientesGetter: 'cartorio/clientesGetter',
             }),
         },
         watch: {
             item(value) {
-                console.log('AEEEEEEEEEEE',value);
-                this.cadastrar.name = value.name;
-                this.cadastrar.document = value.document;
-                this.cadastrar.postcode = value.postcode;
-                this.cadastrar.address = value.address;
-                this.cadastrar.district = value.district;
-                this.cadastrar.city = value.city;
-                this.cadastrar.state = value.state;
-                this.cadastrar.telephone = value.telephone;
-                this.cadastrar.email = value.email;
-                this.cadastrar.active = (value.active === 0 ? "0" : "1");
+                this.cadastrar.id = value.id;
+                this.cadastrar.nome = value.nome;
+                this.cadastrar.documento = value.documento;
+                this.cadastrar.razao = value.razao;
+                this.cadastrar.tipo_documento = value.tipo_documento;
+                this.cadastrar.cep = value.cep;
+                this.cadastrar.logradouro = value.logradouro;
+                this.cadastrar.nome_tabeliao = value.nome_tabeliao;
+                this.cadastrar.bairro = value.bairro;
+                this.cadastrar.localidade = value.localidade;
+                this.cadastrar.uf = value.uf;
+                this.cadastrar.ativo = (value.ativo === 0 ? "0" : "1");
             },
         },
         filters: {
@@ -286,12 +278,12 @@
         },
         methods: {
             ...mapActions({
-                clienteCadastrar: 'cliente/clienteCadastrar',
-                editarCliente: 'cliente/editarCliente',
+                clienteCadastrar: 'cartorio/clienteCadastrar',
+                editarCliente: 'cartorio/editarCliente',
             }),
             searchCep () {
-                if(this.cadastrar.postcode != null && this.cadastrar.postcode.length == 8) {
-                    axios.get(`https://viacep.com.br/ws/${ this.cadastrar.postcode }/json/`)
+                if(this.cadastrar.cep != null && this.cadastrar.cep.length == 8) {
+                    axios.get(`https://viacep.com.br/ws/${ this.cadastrar.cep }/json/`)
                         .then( response => {
                             this.showResults (response.data)
                         })
@@ -301,11 +293,12 @@
                 }
             },
             showResults(address) {
-                this.cadastrar.address = address.logradouro;
-                this.cadastrar.district = address.bairro;
-                this.cadastrar.city = address.localidade;
-                this.cadastrar.state = address.uf;
-                this.$refs.email.focus();
+                console.log('address', address);
+                this.cadastrar.logradouro = address.logradouro;
+                this.cadastrar.bairro = address.bairro;
+                this.cadastrar.localidade = address.localidade;
+                this.cadastrar.uf = address.uf;
+                this.$refs.documento.focus();
             },
             validate(){
                 if (this.$refs.form.validate()) {

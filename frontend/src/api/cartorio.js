@@ -17,26 +17,26 @@ export const syncCliente = function () {
 
 export const cadastraCliente = function (params) {
     console.log('-----', {params});
-    const path = '/clients/cadastrar/';
+    const path = '/cartorio/cadastrar/';
     return http.postRequest(path, params);
 };
 
 
 export const syncExcluirCliente = (id) => {
-    const path = '/clients/delete';
+    const path = '/cartorio/delete';
     console.log('delete', id);
     return http.deleteRequest(path, (id));
 };
 
 export const cadastraClienteImportXML = function (params) {
     console.log('teste', params);
-    const path = '/clients/cadastrar-xml/';
+    const path = '/cartorio/cadastrar-xml/';
     return http.postRequest(path, buildData(params));
 };
 
 export const editarClienteApi = function (params) {
-    console.log('editar', params);
-    const path = '/clients/edit/';
+    console.log('editar', params.id);
+    const path = '/cartorio/edit';
     return http.putRequest(path, buildData(params), params.id);
 };
 
@@ -48,6 +48,6 @@ export const clienteDownloadXsl = async (headers) => {
         responseType: 'blob'
     };
     console.log(config);
-    // const path = '/clients/download';
-    return await http.getRequest('/clients/download', config);
+    // const path = '/cartorio/download';
+    return await http.getRequest('/cartorio/download', config);
 };

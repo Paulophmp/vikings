@@ -1,5 +1,5 @@
 import * as types from './types';
-import * as api from '@/api/cliente';
+import * as api from '@/api/cartorio';
 
 export const clienteAction = ({ commit }) => api
     .syncCliente()
@@ -31,7 +31,7 @@ export const clienteCadastrarImport = async ({ commit }, params ) => await api
         return data;
     });
 
-export const editarCliente= async ({ commit }, params ) => await api
+export const editarCliente=  ({ commit }, params ) => api
     .editarClienteApi(params)
     .then(({ data }) => {
         console.log('EDITAR', params);
@@ -81,7 +81,7 @@ export const clienteDownload = async ({ commit, dispatch}) => await api
 //     .clienteDownloadXsl({'Accept': `application/xls`})
 //     .then(({response}) => {
 //         console.log(response)
-//         const noArquivo = 'cliente.xls';
+//         const noArquivo = 'cartorio.xls';
 //         // console.log(response.headers['content-type']);
 //         const type = response.headers['content-type'];
 //         const blob = new Blob([response.data], { type: type});

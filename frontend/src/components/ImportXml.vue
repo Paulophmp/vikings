@@ -87,13 +87,13 @@
         },
         computed: {
             ...mapGetters({
-                clientesGetter: 'cliente/clientesGetter',
+                clientesGetter: 'cartorio/clientesGetter',
             }),
         },
         methods : {
             ...mapActions({
-                clienteCadastrarImport: 'cliente/clienteCadastrarImport',
-                clienteDownload: 'cliente/clienteDownload',
+                clienteCadastrarImport: 'cartorio/clienteCadastrarImport',
+                clienteDownload: 'cartorio/clienteDownload',
             }),
             fileValidation() {
                 let file = this.file;

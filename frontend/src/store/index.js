@@ -16,13 +16,13 @@
 
 import Vue from 'vue'
 import Vuex from 'vuex'
-import cliente from '../store/cliente/index';
+import cartorio from './cartorio/index';
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
-    cliente
+    cartorio
   },
   debug: false,
 })

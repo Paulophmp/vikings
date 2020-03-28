@@ -23,13 +23,13 @@
                 style="margin-top: -75px;"
         >
           <v-toolbar flat>
-            <v-toolbar-title class="grey--text">Cadastro de Planilhas</v-toolbar-title>
+            <v-toolbar-title class="grey--text">Cadastro de Cartórios</v-toolbar-title>
             <v-spacer></v-spacer>
 <!--              <formulario/>-->
           </v-toolbar>
           <v-divider></v-divider>
             <div v-if="loading">
-                <Carregando :text="'Clientes Cadastrados'"></Carregando>
+                <Carregando :text="'Cartórios Cadastrados'"></Carregando>
             </div>
             <v-card v-else>
               <v-container>
@@ -39,10 +39,17 @@
                         sort-by="calories"
                         class="elevation-1"
                 >
-                  <template v-slot:item.active="{ item }">
-                    <v-chip>{{ item.active | tipoStatus }}</v-chip>
+                  <template v-slot:item.ativo="{ item }">
+                    <v-chip>{{ item.ativo | tipoStatus }}</v-chip>
                   </template>
                     <template v-slot:item.action="{ item }">
+                        <v-icon
+                                small
+                                class="mr-2"
+                                @click="showItem(item)"
+                        >
+                            mdi-eye
+                        </v-icon>
                             <v-icon
                                     small
                                     class="mr-2"
@@ -61,7 +68,6 @@
                     </template>
                 </v-data-table>
                   <template>
-
                       <v-col align="center">
                           <v-card
                                   color="grey lighten-4"
@@ -80,6 +86,120 @@
               <formulario type-form="edite" :item="editedItem"></formulario>
           </v-card>
       </v-dialog>
+
+      <v-dialog
+              v-model="dialogVisual"
+              @keydown.esc="dialog = false"
+              max-width="1290px">
+          <v-card>
+              <v-card-text class="pl-5">
+                  <v-container
+                          grid-list-md
+                          text-xs-left>
+                      <v-layout
+                              justify-space-around
+                              row
+                              wrap>
+                          <v-flex
+                                  lg12
+                                  dark
+                                  class="text-xs-left">
+                              <b><h4>DADOS DO CARTÓRIO</h4></b>
+                              <v-divider class="pb-2"/>
+                          </v-flex>
+                          <v-flex>
+                              <p><b>Nome do Cartório</b></p>
+                              {{ itemEmVisualizacao.nome }}
+                              <p />
+                          </v-flex>
+                          <v-flex>
+                              <p><b>Nome do Tabelião</b></p>
+                              <p>
+                                  {{ itemEmVisualizacao.nome_tabeliao }}
+                              </p>
+                          </v-flex>
+                          <v-flex>
+                              <p><b>Tipo do Documento</b></p>
+                              <p>
+                                  {{ itemEmVisualizacao.tipo_documento }}
+                              </p>
+                          </v-flex>
+                          <v-flex>
+                              <p><b>Número do documento</b></p>
+                              <p>
+                                  {{ itemEmVisualizacao.documento }}
+                              </p>
+                          </v-flex>
+                          <v-flex>
+                              <p><b>Status</b></p>
+                              <p v-if="itemEmVisualizacao.ativo === 1">
+                                  Ativo
+                              </p>
+                              <p v-else>
+                                  Inativo
+                              </p>
+                          </v-flex>
+                      </v-layout>
+                      <v-layout
+                              justify-space-around
+                              row
+                              wrap>
+                          <v-flex
+                                  lg12
+                                  dark
+                                  class="text-xs-left">
+                              <b><h4>ENDEREÇO</h4></b>
+                              <v-divider class="pb-2"/>
+                          </v-flex>
+                          <v-flex>
+                              <p><b>Logradouro</b></p>
+                              <p>
+                                  {{ itemEmVisualizacao.logradouro }}
+                              </p>
+                          </v-flex>
+                          <v-flex>
+                              <p><b>Bairro</b></p>
+                              <p>
+                                  {{ itemEmVisualizacao.bairro }}
+                              </p>
+                          </v-flex>
+                          <v-flex>
+                              <p><b>Localidade</b></p>
+                              <p>
+                                  {{ itemEmVisualizacao.localidade }}
+                              </p>
+                          </v-flex>
+                          <v-flex>
+                              <p><b>UF</b></p>
+                              <p>
+                                  {{ itemEmVisualizacao.uf }}
+                              </p>
+                          </v-flex>
+                          <v-flex>
+                              <p><b>CEP</b></p>
+                              <p>
+                                  {{ itemEmVisualizacao.cep }}
+                              </p>
+                          </v-flex>
+
+                      </v-layout>
+                  </v-container>
+              </v-card-text>
+              <v-divider/>
+              <v-card-actions>
+                  <v-spacer/>
+                  <v-btn
+                          color="red"
+                          text
+                          @click="dialog = false"
+                  >
+                      Fechar
+                  </v-btn>
+              </v-card-actions>
+          </v-card>
+      </v-dialog>
+
+
    </div>
 </template>
 
@@ -97,21 +217,21 @@
         Carregando
     },
     data: () => ({
+
         itemIdParaExclusao: null,
         dialog: false,
+        dialogVisual: false,
         loading: true,
         editedItem: '',
+        itemEmVisualizacao: {},
         headers: [
             {
-              text: 'Nome',
+              text: 'Nome Cartório',
               align: 'start',
-              value: 'name',
+              value: 'nome',
             },
-            { text: 'CPF', value: 'document' },
-            { text: 'Cidade', value: 'city' },
-            { text: 'Telefone', value: 'telephone' },
-            { text: 'E-mail', value: 'email' },
-            { text: 'Status', value: 'active' },
+            { text: 'tabeliao', value: 'nome_tabeliao' },
+            { text: 'Status', value: 'ativo' },
             { text: 'Ações', value: 'action', sortable: false },
          ],
     }),
@@ -138,7 +258,7 @@
 
     computed: {
       ...mapGetters({
-            clientesGetter: 'cliente/clientesGetter',
+            clientesGetter: 'cartorio/clientesGetter',
       }),
     },
     watch: {
@@ -148,12 +268,17 @@
     },
     methods: {
       ...mapActions({
-          clienteAction: 'cliente/clienteAction',
-          excluirClienteAction: 'cliente/excluirClienteAction',
+          clienteAction: 'cartorio/clienteAction',
+          excluirClienteAction: 'cartorio/excluirClienteAction',
       }),
         editItem(item) {
+            console.log('editItem', item);
             this.editedItem = Object.assign({}, item);
             this.dialog = true;
+        },
+        showItem(item) {
+            this.itemEmVisualizacao = Object.assign({}, item);
+            this.dialogVisual = true;
         },
         deletarItem(item) {
             const index = this.clientesGetter.indexOf(item);
