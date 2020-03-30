@@ -52,7 +52,7 @@
                                   ></v-text-field>
                               </v-col>
 
-                          <v-col cols="9" sm="3">
+                          <v-col cols="8" sm="3">
                               <v-select
                                       v-model="cadastrar.tipo_documento"
                                       :items="itemsDocumento"
@@ -63,16 +63,30 @@
                                       required
                                       outlined
                                       clear-icon="clear"
+                                      @change="changedValue"
+                                      @selected="changedLabel"
                               >
                               </v-select>
                           </v-col>
+<!--                          <v-col cols="10" sm="4">-->
+<!--                              <v-text-field-->
+<!--                                      v-model="cadastrar.documento"-->
+<!--                                      :counter="14"-->
+<!--                                      ref="documento"-->
+<!--                                      v-mask="maskCPF"-->
+<!--                                      :rules="cpfRules"-->
+<!--                                      label="CPF"-->
+<!--                                      outlined-->
+<!--                              ></v-text-field>-->
+<!--                          </v-col>-->
                           <v-col cols="10" sm="4">
                               <v-text-field
                                       v-model="cadastrar.documento"
-                                      :counter="14"
+                                      :counter="18"
                                       ref="documento"
-                                      :rules="cpfRules"
-                                      label="Documento"
+                                      v-mask="maskCNPJ"
+                                      :rules="cnpjRules"
+                                      label="CNPJ"
                                       outlined
                               ></v-text-field>
                           </v-col>
@@ -82,14 +96,16 @@
                                           v-model="cadastrar.cep"
                                           label="CEP"
                                           outlined
+                                          v-mask="maskCep"
                                           counter="9"
+                                          ref="cep"
                                           :rules="cepRules"
                                           @keyup="searchCep"
                                           @keydown="searchCep($event)"
                                           required
                                   ></v-text-field>
                               </v-col>
-                                  <v-layout  v-if="cadastrar.cep != null && cadastrar.cep.length === 8">
+                                  <v-layout  v-if="cadastrar.cep != null && cadastrar.cep.length === 9">
 
                                   <v-col cols="8" sm="4"
                                   >
@@ -203,9 +219,13 @@
 </template>
 <script>
     import {mapActions, mapGetters} from 'vuex';
-    import axios from 'axios'
+    import axios from 'axios';
+    import {mask} from 'vue-the-mask'
+    import cnpjFilter from '../filters/cnpj-cpf';
+
     export default {
         name: 'Formulario',
+        directives: {mask},
         props: {
             typeForm: {
                 default: 'create',
@@ -225,6 +245,9 @@
                 { id: '1', label: 'CPF' },
                 { id: '2', label: 'CNPJ' },
             ],
+            maskCep: '#####-###',
+            maskCPF: '###.###.###-##',
+            maskCNPJ: '##.###.###/####-##',
             valid: true,
             dialog: false,
             loading: false,
@@ -255,7 +278,11 @@
             ],
             cpfRules: [
                 v => !!v || 'CPF is required',
-                v => (v && v.length <= 14) || 'CPF must be less than 10 characters',
+                v => (v && v.length >= 14) || 'CPF must be less than 14 characters',
+            ],
+            cnpjRules: [
+                v => !!v || 'CNPJ is required',
+                v => (v && v.length >= 18) || 'CNPJ must be less than 18 characters',
             ],
             cepRules: [
                 v => !!v || 'CEP is required',
@@ -280,7 +307,7 @@
             item(value) {
                 this.cadastrar.id = value.id;
                 this.cadastrar.nome = value.nome;
-                this.cadastrar.documento = value.documento;
+                this.cadastrar.documento = value.documento ;
                 this.cadastrar.razao = value.razao;
                 this.cadastrar.tipo_documento = value.tipo_documento;
                 this.cadastrar.cep = value.cep;
@@ -293,20 +320,7 @@
             },
         },
         filters: {
-            tipoStatus(id) {
-                let tipoStatus = '';
-                switch (id) {
-                    case 1:
-                        tipoStatus = '';
-                        break;
-                    case 0:
-                        tipoStatus = 'Inativo';
-                        break;
-                    default:
-                        tipoStatus = '';
-                }
-                return tipoStatus;
-            },
+            cnpjFilter,
         },
         methods: {
             ...mapActions({
@@ -315,18 +329,18 @@
                 clienteAction: 'cartorio/clienteAction',
             }),
             searchCep () {
-                if(this.cadastrar.cep != null && this.cadastrar.cep.length == 8) {
+                if(this.cadastrar.cep != null && this.cadastrar.cep.length == 9) {
                     axios.get(`https://viacep.com.br/ws/${ this.cadastrar.cep }/json/`)
-                        .then( response => {
+                            .then( response => {
                             this.showResults (response.data)
                         })
-                        .catch(
-                            this.menssageError('Cep não encontrado!')
-                        )
                 }
             },
             showResults(address) {
-                console.log('address', address);
+                if (address.erro){
+                    this.menssageError('Cep não encontrado!');
+                    return;
+                }
                 this.cadastrar.logradouro = address.logradouro;
                 this.cadastrar.bairro = address.bairro;
                 this.cadastrar.localidade = address.localidade;
@@ -349,16 +363,6 @@
                         });
                 }
 
-                // this.loading1 = true;
-                // this.clienteCadastrarImport(this.file)
-                //     .then((data) => {
-                //         console.log(data);
-                //         this.clienteAction();
-                //         this.file = null;
-                //     })
-                //     .finally(() => {
-                //         this.loading1 = false;
-                //     });
             },
             reset () {
                 this.$refs.form.reset()
@@ -382,6 +386,19 @@
                 } else {
                     this.menssageError();
                 }
+            },
+            changedValue: function(value) {
+                if (value === '1'){
+                    console.log('CPF',value)
+                }else{
+                    console.log('CNPJ',value)
+                }
+
+                //receive the value selected (return an array if is multiple)
+            },
+            changedLabel: function(label) {
+                console.log('label', label)
+                //receive the label of the value selected (the label shown in the select, or an empty string)
             }
         }
     }
