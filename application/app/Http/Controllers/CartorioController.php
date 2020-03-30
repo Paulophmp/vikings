@@ -40,14 +40,6 @@ class CartorioController extends Controller
 
     public function storeXML(Request $request)
     {
-//        $file = $request['file'];
-//dd($file->getClientOriginalExtension());
-//        if ($file->getClientOriginalExtension() != 'xml') {
-//            return response()->json('Somente arquivo XML', 400);
-//        }
-//         = Input::file('');
-        $file = $request->file('file');
-
         try {
             $serviceCartorio = new CartorioService();
             $serviceCartorio->salvarCartoriosImportXML($request);
@@ -67,7 +59,7 @@ class CartorioController extends Controller
     {
         try {
             $serviceCartorio = new CartorioService();
-            $cartorio = $serviceCartorio->editarCartorio($request, $id);
+            $serviceCartorio->editarCartorio($request, $id);
 
             return response()->json('Atualizado com sucesso', 200);
         } catch (ValidatorException $e) {
@@ -97,7 +89,6 @@ class CartorioController extends Controller
 
     public function mail()
     {
-        return view('clients.mail');
     }
 
     public function send(Request $request)

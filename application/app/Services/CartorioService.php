@@ -58,10 +58,10 @@ class CartorioService
 
             $cartorio = new Cartorio();
             $cartorio->nome = $request['nome'];
-            $cartorio->documento = $request['documento'];
+            $cartorio->documento = $this->limpaCpfCnpjCep($request['documento']);
             $cartorio->razao = $request['razao'];
             $cartorio->tipo_documento = $request['tipo_documento'];
-            $cartorio->cep = $request['cep'];
+            $cartorio->cep = $this->limpaCpfCnpjCep($request['cep']);
             $cartorio->logradouro = $request['logradouro'];
             $cartorio->nome_tabeliao = $request['nome_tabeliao'];
             $cartorio->bairro = $request['bairro'];
@@ -79,10 +79,19 @@ class CartorioService
         return $cartorios;
     }
 
+    /**
+     * @param $request
+     * @param $id
+     * @return mixed
+     */
     public function editarCartorio($request, $id)
     {
+        $data = $request->all();
+        $data['cep'] = $this->limpaCpfCnpjCep($data['cep']);
+        $data['documento'] = $this->limpaCpfCnpjCep($data['documento']);
+
         $atualizar = Cartorio::find($id)
-            ->update($request->all());
+            ->update($data);
 
         return $atualizar;
     }
@@ -91,5 +100,10 @@ class CartorioService
     {
         $deletarCliente = Cartorio::find($id);
         $deletarCliente->delete();
+    }
+
+    public function limpaCpfCnpjCep($valor){
+        $valor = preg_replace('/[^0-9]/', '', $valor);
+        return $valor;
     }
 }
