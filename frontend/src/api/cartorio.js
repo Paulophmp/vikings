@@ -54,9 +54,8 @@ export const cadastraClienteImportXML = function (params) {
 
 
 export const editarClienteApi = function (params) {
-    console.log('editar', params.id);
     const path = '/cartorio/edit';
-    return http.putRequest(path, buildData(params), params.id);
+    return http.putRequest(path, params, params.id);
 };
 
 

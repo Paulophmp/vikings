@@ -1,14 +1,5 @@
 <template>
-<!--    <v-dialog v-model="dialog" max-width="1500">-->
-<!--      <template v-slot:activator="{ on }">-->
-<!--        <v-btn-->
-<!--                @click.stop="dialog = true"-->
-<!--                class="mx-2" fab dark small color="primary">-->
-<!--          <v-icon dark  v-on="on">mdi-plus</v-icon>-->
-<!--        </v-btn>-->
-<!--      </template>-->
-
-      <v-card>
+     <v-card>
         <v-card-title>
           <span v-if="typeForm === 'create'"
                   class="headline" >Cadastrar</span>
@@ -17,7 +8,6 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-<!--              {{ clientesGetter }}-->
                   <v-form
                           enctype="multipart/form-data"
                           ref="form"
@@ -64,29 +54,17 @@
                                       outlined
                                       clear-icon="clear"
                                       @change="changedValue"
-                                      @selected="changedLabel"
                               >
                               </v-select>
                           </v-col>
-<!--                          <v-col cols="10" sm="4">-->
-<!--                              <v-text-field-->
-<!--                                      v-model="cadastrar.documento"-->
-<!--                                      :counter="14"-->
-<!--                                      ref="documento"-->
-<!--                                      v-mask="maskCPF"-->
-<!--                                      :rules="cpfRules"-->
-<!--                                      label="CPF"-->
-<!--                                      outlined-->
-<!--                              ></v-text-field>-->
-<!--                          </v-col>-->
                           <v-col cols="10" sm="4">
                               <v-text-field
                                       v-model="cadastrar.documento"
-                                      :counter="18"
+                                      :counter="maskSize"
                                       ref="documento"
-                                      v-mask="maskCNPJ"
-                                      :rules="cnpjRules"
-                                      label="CNPJ"
+                                      v-mask="maskBase"
+                                      :rules="maskRules"
+                                      :label="maskLabel"
                                       outlined
                               ></v-text-field>
                           </v-col>
@@ -184,7 +162,6 @@
               >
                   {{ text }}
                   <v-btn
-
                           @click="snackbar = false"
                   >
                       <v-icon>mdi-close-circle</v-icon>
@@ -212,10 +189,8 @@
                     Atualizar
                 </v-btn>
             </div>
-
         </v-card-actions>
       </v-card>
-<!--    </v-dialog>-->
 </template>
 <script>
     import {mapActions, mapGetters} from 'vuex';
@@ -248,6 +223,10 @@
             maskCep: '#####-###',
             maskCPF: '###.###.###-##',
             maskCNPJ: '##.###.###/####-##',
+            maskBase: '',
+            maskLabel: null,
+            maskRules: [],
+            maskSize: null,
             valid: true,
             dialog: false,
             loading: false,
@@ -272,6 +251,7 @@
                 localidade: '', //email : '',
                 ativo: '', //active : '',
             },
+
             nameRules: [
                 v => !!v || 'Name is required',
                 v => (v && v.length >= 5) || 'Name must be less than 10 characters',
@@ -303,24 +283,12 @@
                 clientesGetter: 'cartorio/clientesGetter',
             }),
         },
-        watch: {
-            item(value) {
-                this.cadastrar.id = value.id;
-                this.cadastrar.nome = value.nome;
-                this.cadastrar.documento = value.documento ;
-                this.cadastrar.razao = value.razao;
-                this.cadastrar.tipo_documento = value.tipo_documento;
-                this.cadastrar.cep = value.cep;
-                this.cadastrar.logradouro = value.logradouro;
-                this.cadastrar.nome_tabeliao = value.nome_tabeliao;
-                this.cadastrar.bairro = value.bairro;
-                this.cadastrar.localidade = value.localidade;
-                this.cadastrar.uf = value.uf;
-                this.cadastrar.ativo = (value.ativo === 0 ? "0" : "1");
-            },
-        },
+        watch: {},
         filters: {
             cnpjFilter,
+        },
+        mounted() {
+            this.populated();
         },
         methods: {
             ...mapActions({
@@ -328,6 +296,27 @@
                 editarCliente: 'cartorio/editarCliente',
                 clienteAction: 'cartorio/clienteAction',
             }),
+
+            async populated() {
+                if (this.item) {
+                    this.cadastrar.id = this.item.id;
+
+                    this.cadastrar.nome = this.item.nome;
+                    this.cadastrar.documento = this.item.documento;
+                    this.cadastrar.razao = this.item.razao;
+                    this.cadastrar.tipo_documento = this.item.tipo_documento;
+                    this.cadastrar.cep = this.item.cep;
+                    this.cadastrar.logradouro = this.item.logradouro;
+                    this.cadastrar.nome_tabeliao = this.item.nome_tabeliao;
+                    this.cadastrar.bairro = this.item.bairro;
+                    this.cadastrar.localidade = this.item.localidade;
+                    this.cadastrar.uf = this.item.uf;
+                    this.cadastrar.ativo = (this.item.ativo === 0 ? "0" : "1");
+
+                    this.changedValue(this.cadastrar.tipo_documento);
+                    this.searchCep();
+                }
+            },
             searchCep () {
                 if(this.cadastrar.cep != null && this.cadastrar.cep.length == 9) {
                     axios.get(`https://viacep.com.br/ws/${ this.cadastrar.cep }/json/`)
@@ -388,18 +377,20 @@
                 }
             },
             changedValue: function(value) {
-                if (value === '1'){
-                    console.log('CPF',value)
-                }else{
-                    console.log('CNPJ',value)
+                if (value === '1') {
+                    this.maskBase = this.maskCPF;
+                    this.maskLabel = 'CPF';
+                    this.maskRules = this.cpfRules;
+                    this.maskSize = 14;
                 }
 
-                //receive the value selected (return an array if is multiple)
+                if (value === '2') {
+                    this.maskBase = this.maskCNPJ;
+                    this.maskLabel = 'CNPJ';
+                    this.maskRules = this.cnpjRules;
+                    this.maskSize = 18;
+                }
             },
-            changedLabel: function(label) {
-                console.log('label', label)
-                //receive the label of the value selected (the label shown in the select, or an empty string)
-            }
         }
     }
 </script>
