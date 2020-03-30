@@ -144,7 +144,7 @@
                           <v-flex>
                               <p><b>Número do documento</b></p>
                               <p>
-                                  {{ itemEmVisualizacao.documento }}
+                                  {{ itemEmVisualizacao.documento | cnpjFilter }}
                               </p>
                           </v-flex>
                           <v-flex>
@@ -225,6 +225,7 @@
   import Formulario from './Formulario';
   import ImportXml from './ImportXml';
   import Carregando from './Carregando';
+  import cnpjFilter from '@/filters/cnpj-cpf';
 
 
   export default {
@@ -254,6 +255,7 @@
          ],
     }),
     filters: {
+      cnpjFilter,
       tipoStatus(id) {
         let tipoStatus = '';
         switch (id) {
