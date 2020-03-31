@@ -13,7 +13,6 @@ class CartorioService
         $cartorios = json_decode(json_encode((array) $cartorios), true);
 
         foreach ($cartorios['cartorio'] as $cartorio) {
-//        dd($cartorio);
             $arrReplace = [
                 'nome' => $cartorio['nome'],
                 'documento' => $cartorio['documento'],
@@ -30,7 +29,7 @@ class CartorioService
             ];
             // Verify if document is unique to save only different data
             $find = Cartorio::where('documento', '=', $cartorio['documento'])->first();
-//dd($find);
+
             $cartorio = new Cartorio();
 
             if (!empty($find)) {
@@ -76,7 +75,31 @@ class CartorioService
     {
         $cartorios = Cartorio::orderBy('nome')->get();
 
-        return $cartorios;
+        $dadosArray = $this->montaArrayDados($cartorios);
+        $resultArray['dados'] = $dadosArray;
+        return $resultArray;
+    }
+
+    private function montaArrayDados($itensDados) {
+        $dadosArray = [];
+        foreach ($itensDados as $item) {
+            $dadosArray[] = [
+                'documento' => $this->formatCpfCnpjCep($item['documento']),
+                'cep' => $this->formatCpfCnpjCep($item['cep']),
+                'nome' => $item['nome'],
+                'nome_tabeliao' => $item['nome_tabeliao'],
+                'razao' => $item['razao'],
+                'tipo_documento' => $item['tipo_documento'],
+                'logradouro' => $item['logradouro'],
+                'bairro' => $item['bairro'],
+                'email' => $item['email'],
+                'localidade' => $item['localidade'],
+                'uf' => $item['uf'],
+                'ativo' => $item['ativo'],
+                'id' => $item['id'],
+            ];
+        }
+        return $dadosArray;
     }
 
     /**
@@ -105,5 +128,18 @@ class CartorioService
     public function limpaCpfCnpjCep($valor){
         $valor = preg_replace('/[^0-9]/', '', $valor);
         return $valor;
+    }
+
+    function formatCpfCnpjCep($value)
+    {
+        $cnpj_cpf = preg_replace("/\D/", '', $value);
+
+        if (strlen($cnpj_cpf) === 8) {
+            return preg_replace("/(\d{5})(\d{3})/", "\$1-\$2", $cnpj_cpf);
+        }elseif (strlen($cnpj_cpf) === 11) {
+            return preg_replace("/(\d{3})(\d{3})(\d{3})(\d{2})/", "\$1.\$2.\$3-\$4", $cnpj_cpf);
+        }
+
+        return preg_replace("/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/", "\$1.\$2.\$3/\$4-\$5", $cnpj_cpf);
     }
 }

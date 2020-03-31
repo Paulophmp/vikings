@@ -12,13 +12,16 @@ use App\Services\CartorioService;
 
 class CartorioController extends Controller
 {
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         $serviceCartorio = new CartorioService();
         $cartorio = $serviceCartorio->listarCartorio();
 
         if (empty($cartorio)) {
-            return response()->json('Cartorio não encontrado', 400);
+            return response()->json('Cartório não encontrado', 400);
         }
 
         return response()->json($cartorio, 200);
@@ -50,11 +53,11 @@ class CartorioController extends Controller
         }
     }
 
-    public function show(Cartorio $client)
-    {
-        return view('clients.show', compact('client'));
-    }
-
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function edit(Request $request, $id)
     {
         try {
