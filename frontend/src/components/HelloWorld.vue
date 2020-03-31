@@ -39,13 +39,17 @@
               <v-container>
                 <v-data-table
                         :headers="headers"
-                        :items="clientesGetter"
+                        :items="clientesGetter.dados"
                         sort-by="calories"
                         class="elevation-1"
                 >
                   <template v-slot:item.ativo="{ item }">
-                    <v-chip>{{ item.ativo | tipoStatus }}</v-chip>
+                      <v-btn x-small color="secondary" dark>{{ item.ativo | tipoStatus }}</v-btn>
                   </template>
+                  <template v-slot:item.tipo_documento="{ item }">
+                      <v-btn x-small color="primary" dark>{{ item.tipo_documento | tipoDocumento }}</v-btn>
+                  </template>
+
                     <template v-slot:item.action="{ item }">
                         <v-icon
                                 small
@@ -249,7 +253,8 @@
               align: 'start',
               value: 'nome',
             },
-            { text: 'tabeliao', value: 'nome_tabeliao' },
+            { text: 'Tipo Documento', value: 'tipo_documento' },
+            { text: 'Tabelião', value: 'nome_tabeliao' },
             { text: 'Status', value: 'ativo' },
             { text: 'Ações', value: 'action', sortable: false },
          ],
@@ -270,6 +275,20 @@
         }
         return tipoStatus;
       },
+        tipoDocumento(id) {
+            let tipoDocumento = '';
+            switch (id) {
+                case '1':
+                    tipoDocumento = 'CPF¹' ;
+                    break;
+                case '2':
+                    tipoDocumento = 'CNPJ²';
+                    break;
+                default:
+                    tipoDocumento = '';
+            }
+            return tipoDocumento;
+        },
     },
 
      mounted() {
@@ -301,9 +320,8 @@
             this.dialogVisual = true;
         },
         deletarItem(item) {
-            const index = this.clientesGetter.indexOf(item);
-            // this.excluirClienteAction(item.id);
-            this.excluirClienteAction(item.id) && this.clientesGetter.splice(index, 1);
+            const index = this.clientesGetter.dados.indexOf(item);
+            this.excluirClienteAction(item.id) && this.clientesGetter.dados.splice(index, 1);
         },
         cadastrar() {
             this.dialogCadastar = true;

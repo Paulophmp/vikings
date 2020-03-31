@@ -327,7 +327,7 @@
             },
             showResults(address) {
                 if (address.erro){
-                    this.menssageError('Cep não encontrado!');
+                    this.menssageError('CEP não encontrado!');
                     return;
                 }
                 this.cadastrar.logradouro = address.logradouro;
