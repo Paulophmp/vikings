@@ -299,6 +299,7 @@
 
             async populated() {
                 if (this.item) {
+                    console.log('sDISDBSdgbsvasdvy');
                     this.cadastrar.id = this.item.id;
 
                     this.cadastrar.nome = this.item.nome;
@@ -354,7 +355,7 @@
 
             },
             reset () {
-                this.$refs.form.reset()
+                this.$refs.form.reset();
             },
             menssageSuccess(text){
                 this.statusSnackBar = 'success';

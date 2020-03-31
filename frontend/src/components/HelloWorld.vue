@@ -44,10 +44,13 @@
                         class="elevation-1"
                 >
                   <template v-slot:item.ativo="{ item }">
-                      <v-btn x-small color="secondary" dark>{{ item.ativo | tipoStatus }}</v-btn>
+                      <v-btn v-if="item.ativo === 1" x-small color="primary" dark>{{ item.ativo | tipoStatus }}</v-btn>
+                      <v-btn v-else x-small color="red lighten-2" dark>{{ item.ativo | tipoStatus }}</v-btn>
                   </template>
+
                   <template v-slot:item.tipo_documento="{ item }">
-                      <v-btn x-small color="primary" dark>{{ item.tipo_documento | tipoDocumento }}</v-btn>
+                      <v-btn v-if="item.tipo_documento === '1'" x-small color="primary" dark>{{ item.tipo_documento | tipoDocumento }}</v-btn>
+                      <v-btn v-else x-small color="grey lighten-1" dark>{{ item.tipo_documento | tipoDocumento }}</v-btn>
                   </template>
 
                     <template v-slot:item.action="{ item }">
@@ -91,12 +94,12 @@
 
       <v-dialog v-model="dialog" max-width="1180px">
           <v-card>
-              <formulario type-form="edite" :item="editedItem"></formulario>
+              <formulario :key="editedItem.id" type-form="edite" :item="editedItem"></formulario>
           </v-card>
       </v-dialog>
       <v-dialog v-model="dialogCadastar" max-width="1180px">
           <v-card>
-              <formulario></formulario>
+              <formulario :key="0"></formulario>
           </v-card>
       </v-dialog>
       <v-dialog
@@ -246,6 +249,7 @@
         dialogVisual: false,
         loading: true,
         editedItem: '',
+        cor: 'primary',
         itemEmVisualizacao: {},
         headers: [
             {
@@ -304,6 +308,12 @@
         clientesGetter() {
             this.loading = false;
         },
+
+        dialog(val) {
+            if (!val) {
+                // this.clienteAction();
+            }
+        }
     },
     methods: {
       ...mapActions({

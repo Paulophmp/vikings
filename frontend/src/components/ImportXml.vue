@@ -49,7 +49,7 @@
                         <v-icon right dark>mdi-cloud-upload</v-icon>
                     </v-btn>
                 </template>
-                <template v-if="clientesGetter.length > 0">
+                <template v-if="clientesGetter.dados.length > 0">
                     <v-btn
                         :loading="loading"
                         :disabled="loading"
