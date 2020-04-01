@@ -36,12 +36,38 @@
                 <Carregando :text="'Cartórios Cadastrados'"></Carregando>
             </div>
             <v-card v-else>
+                <v-card-title>
+                    <v-col cols="12" sm="6">
+                        <v-text-field
+                                v-model="search"
+                                append-icon="mdi-magnify"
+                                label="Search"
+                                chips
+                                multiple
+                                solo
+                                clearable
+                        ></v-text-field>
+                    </v-col>
+<!--                    <v-col cols="12" sm="6">-->
+<!--                        <v-select-->
+<!--                                v-model="value"-->
+<!--                                :items="itemsDocumento"-->
+<!--                                chips-->
+<!--                                item-text="label"-->
+<!--                                item-value="id"-->
+<!--                                label="Tipo de Documento"-->
+<!--                                solo-->
+<!--                        ></v-select>-->
+<!--                    </v-col>-->
+                </v-card-title>
               <v-container>
                 <v-data-table
                         :headers="headers"
                         :items="clientesGetter.dados"
                         sort-by="calories"
                         class="elevation-1"
+                        :search="search"
+                        :itemsDocumento="itemsDocumento"
                 >
                   <template v-slot:item.ativo="{ item }">
                       <v-btn v-if="item.ativo === 1" x-small color="primary" dark>{{ item.ativo | tipoStatus }}</v-btn>
@@ -77,6 +103,13 @@
                             mdi-delete
                         </v-icon>
                     </template>
+                    <v-alert
+                            slot="no-results"
+                            :value="true"
+                            color="grey lighten-2"
+                            icon="mdi-alert-outline">
+                        Sua busca por "{{ search }}" não encontrou nenhum resultado.
+                    </v-alert>
                 </v-data-table>
                   <template>
                       <v-col align="center">
@@ -251,6 +284,14 @@
         editedItem: '',
         cor: 'primary',
         itemEmVisualizacao: {},
+        search: "",
+        // items: ['CPF', 'CNPJ'],
+        value: ['CPF', 'CNPJ'],
+
+        itemsDocumento: [
+            { id: '1', label: 'CPF' },
+            { id: '2', label: 'CNPJ' },
+        ],
         headers: [
             {
               text: 'Nome Cartório',
