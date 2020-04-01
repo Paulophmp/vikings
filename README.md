@@ -29,7 +29,7 @@ Após alguns minutos(depende da conexão) a aplicação estará disponível em:
  - Backend => http://localhost:8082
  
  ### Documentação - RN
-  [Documentação do projeto](README_DOCUMENTACAO.md)
+  [Documentação do projeto](README_DOC.md)
 
  ### Arquivos necessários
  * [Arquivo XML](https://github.com/p21sistemas/vikings/blob/master/Cart%C3%B3rios-CNJ.xml) - Arquivo XML para importação
