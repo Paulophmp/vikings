@@ -12,7 +12,7 @@
 */
 
 
-Route::get('cartorio', 'CartorioController@index');
+Route::get('/', 'CartorioController@index');
 Route::post('/cartorio/cadastrar', 'CartorioController@store');
 Route::post('/cartorio/cadastrar-xml', 'CartorioController@storeXML');
 Route::get('/cartorio/download', 'CartorioController@export');

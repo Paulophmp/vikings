@@ -24,7 +24,7 @@ const buildData = (params, form, namespace) => {
 
 
 export const syncCliente = function () {
-    return http.getRequest('/cartorio');
+    return http.getRequest('/');
 };
 
 export const cadastraCliente = function (params) {
