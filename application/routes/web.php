@@ -19,4 +19,6 @@ Route::get('/cartorio/download', 'CartorioController@export');
 Route::delete('/cartorio/delete/{id}', 'CartorioController@destroy');
 Route::put('/cartorio/edit/{id}', 'CartorioController@edit');
 
+Route::post('cartorio/sendmail', 'CartorioController@send');
+
 #docker exec php-teste-vikings /bin/bash -c 'php artisan migrate:fresh --seed'

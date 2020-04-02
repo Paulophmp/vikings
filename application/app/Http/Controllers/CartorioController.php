@@ -90,21 +90,19 @@ class CartorioController extends Controller
     }
 
 
-    public function mail()
-    {
-    }
 
     public function send(Request $request)
     {
-        $clients = Cartorio::where('active', '=', 1)->where('email', '!=', '')->orWhere('email', '!=', null)->get();
-        $arrTo = [];
-        foreach ($clients as $client) {
-            $arrTo[] = $client->email;
+        try {
+            $input = $request->all();
+
+            $serviceCartorio = new CartorioService();
+            $serviceCartorio->sendMail($input);
+
+            return response()->json('Email enviado com sucesso', 200);
+        } catch (ValidatorException $e) {
+            return response()->json($e->getMessage(), 400);
         }
 
-        Mail::bcc($arrTo)->send(new SendMailUser($request));
-
-        return redirect()->route('clients.index')->with('success',
-            'Comunicado enviado para todos os torcedores ativos.');
     }
 }

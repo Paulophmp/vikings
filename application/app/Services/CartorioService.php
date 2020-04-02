@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Cartorio;
+use Illuminate\Support\Facades\Mail;
 
 class CartorioService
 {
@@ -141,5 +142,31 @@ class CartorioService
         }
 
         return preg_replace("/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/", "\$1.\$2.\$3/\$4-\$5", $cnpj_cpf);
+    }
+
+    public function sendMail($request)
+    {
+        $cartorioMail = Cartorio::where('ativo', 1)
+            ->Where('email', '!=', '')
+            ->get()
+            ->toArray();
+
+        $arrTo[] = '';
+        foreach ($cartorioMail as $cartorio) {
+            $arrTo['email'] = $cartorio['email'];
+            $arrTo['nome'] = $cartorio['nome'];
+
+            Mail::send('mail.sendMail', [
+                'nome' => $arrTo['nome'] ,
+                'mensagem' => $request['mensagem']
+            ], function ($m) use ($request, $arrTo) {
+                $m->from('paulotux.mendes@gmail.com', 'Teste Vikings');
+                $m->subject($request['assunto']);
+                $m->to($arrTo['email']);
+            });
+
+        }
+
+
     }
 }
