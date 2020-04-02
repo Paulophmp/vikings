@@ -38,18 +38,13 @@ export const editarCliente=  async ({ commit }, params ) => await api
         return data;
     });
 
-// export const editarCertificadoAction = async ({ commit }, params) => {
-//     const result = await api.syncEditarCertificado(params)
-//         .then(() => {
-//             const { data } = response;
-//             commit(types.SYNC_EDITAR_CERTIFICADO, params);
-//         }).catch((e) => {
-//             // console.log(e)
-//             // throw new TypeError(e, 'error', 10);
-//         });
-//     return result;
-// };
-
+export const cartorioSendEmail = ({ commit }, params ) => api
+    .sendMail(params)
+    .then(({ data }) => {
+        console.log("sendEmail",params);
+        commit(types.SET_CLIENTE, data);
+        return data;
+    });
 
 // eslint-disable-next-line no-unused-vars
 export const clienteDownload = async ({ commit, dispatch}) => await api

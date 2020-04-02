@@ -1,32 +1,34 @@
 <template>
   <div>
       <v-toolbar
-              color="primary"
+              color="grey darken-3"
               dark
               extended
               flat
       >
           <v-spacer></v-spacer>
-          <v-btn
-                  href="https://github.com/Paulophmp/Teste-All_blacks"
-                  target="_blank"
-                  text
-          >
-              <span class="mr-2">LINK GIT HUB</span>
-              <v-icon>mdi-open-in-new</v-icon>
-          </v-btn>
+          <div style="width:500%;margin-top:15px;float:left;padding:8% 0 5%;text-align:center;">
+              <a
+                  href="https://github.com/Paulophmp/viking"
+                  target="_blank">
+                  <img src="https://pngimage.net/wp-content/uploads/2018/06/vikings-serie-png-6.png" style="max-width:55%;width:210px">
+              </a>
+          </div>
       </v-toolbar>
       <v-container>
         <v-card
                 class="mx-auto"
                 max-width="1200"
-                style="margin-top: -75px;"
+                style="margin-top: -18px;"
         >
           <v-toolbar flat>
-            <v-toolbar-title class="grey--text">Cadastro de Cartórios</v-toolbar-title>
+            <v-toolbar-title class="black--text font-weight-bold">Cadastro de Cartórios</v-toolbar-title>
             <v-spacer></v-spacer>
               <template>
-                  <v-btn class="mx-2" fab dark small color="primary" @click="cadastrar">
+                  <v-btn class="ma-2 black--text" fab dark small color="#FFF" @click="sendMailr">
+                      <v-icon>mdi-email-outline</v-icon>
+                  </v-btn>
+                  <v-btn class="mx-2" fab dark small color="grey darken-4" @click="cadastrar">
                       <v-icon dark>mdi-plus</v-icon>
                   </v-btn>
               </template>
@@ -48,17 +50,6 @@
                                 clearable
                         ></v-text-field>
                     </v-col>
-<!--                    <v-col cols="12" sm="6">-->
-<!--                        <v-select-->
-<!--                                v-model="value"-->
-<!--                                :items="itemsDocumento"-->
-<!--                                chips-->
-<!--                                item-text="label"-->
-<!--                                item-value="id"-->
-<!--                                label="Tipo de Documento"-->
-<!--                                solo-->
-<!--                        ></v-select>-->
-<!--                    </v-col>-->
                 </v-card-title>
               <v-container>
                 <v-data-table
@@ -70,13 +61,13 @@
                         :itemsDocumento="itemsDocumento"
                 >
                   <template v-slot:item.ativo="{ item }">
-                      <v-btn v-if="item.ativo === 1" x-small color="primary" dark>{{ item.ativo | tipoStatus }}</v-btn>
+                      <v-btn v-if="item.ativo === 1" x-small color="grey darken-3" dark>{{ item.ativo | tipoStatus }}</v-btn>
                       <v-btn v-else x-small color="red lighten-2" dark>{{ item.ativo | tipoStatus }}</v-btn>
                   </template>
 
                   <template v-slot:item.tipo_documento="{ item }">
                       <v-btn v-if="item.tipo_documento === '1'" x-small color="primary" dark>{{ item.tipo_documento | tipoDocumento }}</v-btn>
-                      <v-btn v-else x-small color="grey lighten-1" dark>{{ item.tipo_documento | tipoDocumento }}</v-btn>
+                      <v-btn v-else x-small color="grey darken-3" dark>{{ item.tipo_documento | tipoDocumento }}</v-btn>
                   </template>
 
                     <template v-slot:item.action="{ item }">
@@ -133,6 +124,11 @@
       <v-dialog v-model="dialogCadastar" max-width="1180px">
           <v-card>
               <formulario :key="0"></formulario>
+          </v-card>
+      </v-dialog>
+      <v-dialog v-model="dialogSendMailr" max-width="800px">
+          <v-card>
+              <SendMail :key="1"></SendMail>
           </v-card>
       </v-dialog>
       <v-dialog
@@ -246,9 +242,9 @@
               <v-card-actions>
                   <v-spacer/>
                   <v-btn
-                          color="red"
+                          color="grey darken-3"
                           text
-                          @click="dialog = false"
+                          @click="dialogVisual = false"
                   >
                       Fechar
                   </v-btn>
@@ -265,6 +261,7 @@
   import Formulario from './Formulario';
   import ImportXml from './ImportXml';
   import Carregando from './Carregando';
+  import SendMail from './SendMail';
   import cnpjFilter from '@/filters/cnpj-cpf';
 
 
@@ -272,13 +269,15 @@
     components: {
         Formulario,
         ImportXml,
-        Carregando
+        Carregando,
+        SendMail
     },
     data: () => ({
 
         itemIdParaExclusao: null,
         dialog: false,
         dialogCadastar: false,
+        dialogSendMailr: false,
         dialogVisual: false,
         loading: true,
         editedItem: '',
@@ -376,6 +375,9 @@
         },
         cadastrar() {
             this.dialogCadastar = true;
+        },
+        sendMailr() {
+            this.dialogSendMailr = true;
         },
     },
   }

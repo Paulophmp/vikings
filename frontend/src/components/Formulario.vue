@@ -2,9 +2,9 @@
      <v-card>
         <v-card-title>
           <span v-if="typeForm === 'create'"
-                  class="headline" >Cadastrar</span>
+                  class="headline black--text font-weight-bold" >Cadastrar</span>
           <span v-else
-                  class="headline" >Editar</span>
+                  class="headline black--text font-weight-bold" >Editar</span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -175,8 +175,6 @@
                 <v-btn color="blue darken-1" text @click="reset">Limpar</v-btn>
                 <v-btn
                     v-if="typeForm === 'create'"
-                    color="blue darken-1"
-                    text
                     @click="validate"
                     :loading="loading"
                 >Salvar

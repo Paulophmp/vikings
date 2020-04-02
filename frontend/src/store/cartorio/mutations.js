@@ -6,6 +6,7 @@ export const state = {
     downloadCliente: {},
     editarCliente: [],
     updateCliente: [],
+    sendEmail: [],
 };
 
 export const mutations = {
@@ -20,6 +21,9 @@ export const mutations = {
     },
     [types.UPLOAD_CLIENTE](state, params) {
         state.updateCliente = params;
+    },
+    [types.SEND_EMAIL](state, params) {
+        state.sendEmail = params;
     },
     [types.EXCLUIR_CLIENTE] (state, certificadoId) {
         state.excluirCliente.find( (certificado, index) => {

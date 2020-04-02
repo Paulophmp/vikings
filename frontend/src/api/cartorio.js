@@ -53,6 +53,11 @@ export const cadastraClienteImportXML = function (params) {
 };
 
 
+export const sendMail = function (params) {
+    const path = '/cartorio/sendmail';
+    return http.postRequest(path, params);
+};
+
 export const editarClienteApi = function (params) {
     const path = '/cartorio/edit';
     return http.putRequest(path, params, params.id);

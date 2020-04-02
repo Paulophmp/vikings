@@ -53,7 +53,7 @@
                     <v-btn
                         :loading="loading"
                         :disabled="loading"
-                        color="blue"
+                        color="grey darken-3"
                         class="ma-2 white--text"
                         @click="download"
                     >
