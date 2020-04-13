@@ -26,7 +26,6 @@ class CartorioService
                 'cidade' => $cartorio['cidade'],
                 'uf' => $cartorio['uf'],
                 'ativo' => $cartorio['ativo'] ? 1 : 0,
-//                'email' => $cartorio['email'],
             ];
             // Verify if document is unique to save only different data
             $find = Cartorio::where('documento', '=', $cartorio['documento'])->first();
@@ -63,6 +62,8 @@ class CartorioService
             $cartorio->tipo_documento = $request['tipo_documento'];
             $cartorio->cep = $this->limpaCpfCnpjCep($request['cep']);
             $cartorio->logradouro = $request['logradouro'];
+            $cartorio->email = $request['email'];
+            $cartorio->telefone = $request['telefone'];
             $cartorio->nome_tabeliao = $request['nome_tabeliao'];
             $cartorio->bairro = $request['bairro'];
             $cartorio->localidade = $request['localidade'];
@@ -94,6 +95,7 @@ class CartorioService
                 'logradouro' => $item['logradouro'],
                 'bairro' => $item['bairro'],
                 'email' => $item['email'],
+                'telefone' => $item['telefone'],
                 'localidade' => $item['localidade'],
                 'uf' => $item['uf'],
                 'ativo' => $item['ativo'],

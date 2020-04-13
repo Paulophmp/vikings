@@ -25,6 +25,7 @@ class CreateCartoriosTable extends Migration
             $table->string('localidade', 255); //cidade
             $table->string('uf', 2);
             $table->string('email', 255)->nullable();
+            $table->string('telefone', 14)->nullable();
             $table->string('nome_tabeliao', 255);
             $table->boolean('ativo');
             $table->timestamps();
