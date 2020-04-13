@@ -9,7 +9,7 @@
           <v-spacer></v-spacer>
           <div style="width:500%;margin-top:15px;float:left;padding:8% 0 5%;text-align:center;">
               <a
-                  href="https://github.com/Paulophmp/viking"
+                  href="https://github.com/Paulophmp/vikings"
                   target="_blank">
                   <img src="https://pngimage.net/wp-content/uploads/2018/06/vikings-serie-png-6.png" style="max-width:55%;width:210px">
               </a>

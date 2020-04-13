@@ -42,6 +42,23 @@
                                   ></v-text-field>
                               </v-col>
 
+                          <v-col cols="14" sm="6">
+                              <v-text-field
+                                      v-model="cadastrar.email"
+                                      label="Email"
+                                      outlined
+                              ></v-text-field>
+                          </v-col>
+
+                          <v-col cols="14" sm="4">
+                              <v-text-field
+                                      v-model="cadastrar.telefone"
+                                      label="Telefone"
+                                      v-mask="maskTelefone"
+                                      outlined
+                              ></v-text-field>
+                          </v-col>
+
                           <v-col cols="8" sm="3">
                               <v-select
                                       v-model="cadastrar.tipo_documento"
@@ -138,7 +155,7 @@
                                       v-model="cadastrar.ativo"
                                       :items="items"
                                       ref="ativo"
-                                      label="Tipo de ambiente"
+                                      label="Status"
                                       :rules="tipoRules"
                                       item-text="label"
                                       item-value="id"
@@ -219,6 +236,7 @@
                 { id: '2', label: 'CNPJ' },
             ],
             maskCep: '#####-###',
+            maskTelefone: '(##)####-####',
             maskCPF: '###.###.###-##',
             maskCNPJ: '##.###.###/####-##',
             maskBase: '',
@@ -246,8 +264,10 @@
                 logradouro: '', //city: '', // localidade
                 nome_tabeliao: '', //state: '', // UF
                 bairro: '', //telephone: '',
-                localidade: '', //email : '',
+                localidade: '',
                 ativo: '', //active : '',
+                telefone: '',
+                email: ''
             },
 
             nameRules: [
@@ -271,9 +291,6 @@
             ],
             emailRules: [
                 v => !!v || 'E-mail is required',
-            ],
-            telephoneRules: [
-                v => !!v || 'Telefone is required',
             ],
         }),
         computed: {
@@ -308,6 +325,8 @@
                     this.cadastrar.logradouro = this.item.logradouro;
                     this.cadastrar.nome_tabeliao = this.item.nome_tabeliao;
                     this.cadastrar.bairro = this.item.bairro;
+                    this.cadastrar.email = this.item.email;
+                    this.cadastrar.telefone = this.item.telefone;
                     this.cadastrar.localidade = this.item.localidade;
                     this.cadastrar.uf = this.item.uf;
                     this.cadastrar.ativo = (this.item.ativo === 0 ? "0" : "1");
