@@ -18,6 +18,12 @@ Com o git, docker e docker-compose devidamente instalados, basta clonar o projet
 ```bash
  docker-compose up
 ```
+
+Logo após dar permissão na pasta storage:
+```bash
+ chmod -R 775 storage
+```
+
 Em outra aba no terminal rode o seguinte comando para rodas as migrações do banco:
 ```
  docker exec php-teste-vikings /bin/bash -c 'php artisan migrate:fresh --seed'
@@ -25,7 +31,7 @@ Em outra aba no terminal rode o seguinte comando para rodas as migrações do ba
 
 Após alguns minutos(depende da conexão) a aplicação estará disponível em:
 
- - Frontend => http://localhost:8000
+ - Frontend => http://localhost:8080
  - Backend => http://localhost:8082
  
  ### Documentação - RN
