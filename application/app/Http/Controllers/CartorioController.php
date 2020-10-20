@@ -80,14 +80,17 @@ class CartorioController extends Controller
     {
         $file_name = \Carbon\Carbon::now()->format('d-m-Y') . '.xls';
 
-        return (new ClientsExport())->download($file_name, Excel::XLS,
-            [
-                'Content-Description'=> 'File Transfer', 'Accept' => 'application/xls','Content-Type' =>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            ]);
+        return (new ClientsExport())->download($file_name, Excel::XLS, [
+            'Content-Description'=> 'File Transfer',
+            'Accept' => 'application/xls' ,
+            'Content-Type' =>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        ]);
+
     }
 
     public function send(Request $request)
     {
+
         try {
             $input = $request->all();
 
