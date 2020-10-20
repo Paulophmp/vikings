@@ -15,8 +15,8 @@ class CartorioController extends Controller
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
-    {
+
+    public function index(){
         $serviceCartorio = new CartorioService();
         $cartorio = $serviceCartorio->listarCartorio();
 
@@ -25,11 +25,16 @@ class CartorioController extends Controller
         }
 
         return response()->json($cartorio, 200);
+
+
     }
 
     public function store(Request $request)
     {
+
         try {
+
+
             $input = $request->all();
 
             $serviceCartorio = new CartorioService();
