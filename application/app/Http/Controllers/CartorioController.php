@@ -82,7 +82,7 @@ class CartorioController extends Controller
 
         return (new ClientsExport())->download($file_name, Excel::XLS,
             [
-                'Content-Description'=> 'File Transfer',
+                'Content-Description'=> 'File Transfer', 'Accept' => 'application/xls','Content-Type' =>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             ]);
     }
 
