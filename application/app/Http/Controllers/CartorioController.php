@@ -15,8 +15,8 @@ class CartorioController extends Controller
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-
-    public function index(){
+    public function index()
+    {
         $serviceCartorio = new CartorioService();
         $cartorio = $serviceCartorio->listarCartorio();
 
@@ -25,16 +25,11 @@ class CartorioController extends Controller
         }
 
         return response()->json($cartorio, 200);
-
-
     }
 
     public function store(Request $request)
     {
-
         try {
-
-
             $input = $request->all();
 
             $serviceCartorio = new CartorioService();
@@ -79,7 +74,6 @@ class CartorioController extends Controller
     {
         $service = new CartorioService();
         $service->deletarCartorio($id);
-
     }
 
     public function export()
@@ -89,12 +83,8 @@ class CartorioController extends Controller
         return (new ClientsExport())->download($file_name, Excel::XLS,
             [
                 'Content-Description'=> 'File Transfer',
-                'Accept' => 'application/xls',
-                'Content-Type' =>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             ]);
     }
-
-
 
     public function send(Request $request)
     {
@@ -108,6 +98,5 @@ class CartorioController extends Controller
         } catch (ValidatorException $e) {
             return response()->json($e->getMessage(), 400);
         }
-
     }
 }
