@@ -79,6 +79,7 @@ class CartorioController extends Controller
 
     public function export()
     {
+
         $file_name = \Carbon\Carbon::now()->format('d-m-Y') . '.xls';
 
         return (new ClientsExport())->download($file_name, Excel::XLS,
