@@ -85,7 +85,6 @@ class CartorioController extends Controller
             'Accept' => 'application/xls' ,
             'Content-Type' =>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         ]);
-
     }
 
     public function send(Request $request)
